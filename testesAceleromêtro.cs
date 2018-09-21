@@ -2,7 +2,7 @@
 #include<Wire.h>
 
 
-
+//helo word
 String txt = "";
 int AcX,AcY,AcZ;
 const int MPU=0x68;  
