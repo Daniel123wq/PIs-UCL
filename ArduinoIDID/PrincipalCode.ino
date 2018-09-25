@@ -2,10 +2,10 @@
 #include<Wire.h>
 
 //Carrega biblioteca para transformar pinDigital em Serial ( rx tx serial)
-#include<SoftwareSerial.h>
+//#include<SoftwareSerial.h>
+#include<Wire.h>
 
-
-SoftwareSerial serial1(2,3); // RX ==2 TX==3
+//SoftwareSerial serial1(2,3); // RX ==2 TX==3
 
 String txt = "";
 int AcX,AcY,AcZ;
@@ -14,8 +14,10 @@ const int MPU=0x68;
 
 void setup(){
   Serial.begin(9600);
-  serial1.begin(9600)
-
+  //serial1.begin(9600);
+  Wire.begin();
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B); 
 
   //inicializa o acelerometro
   Wire.write(0); 
@@ -25,7 +27,7 @@ void setup(){
 }
 
 void loop(){
-  char ladoDado;
+  //char ladoDado;
 
 
   Wire.beginTransmission(MPU);
@@ -42,42 +44,43 @@ void loop(){
  // TESTE 1ºTESTE 1ºTESTE 1ºTESTE 1ºTESTE 1ºTESTE 1ºTESTE 1ºTESTE 1º APÓS O TESTE, APAGAR OS SERIAL PRINT
   Serial.print("X: ");
   Serial.print(AcX);
-
+  Serial.print("    ");
   Serial.print("Y: ");
   Serial.print(AcY);
-
+  Serial.print("    ");
   Serial.print("Z: ");
   Serial.print(AcZ);
-/////////////////////////////////////////////////////////////////////////////	//
-//traduzir valores do eixos para número		>>>>>>LOGICA PRINCIPAL<<<<<<				//
-// TESTE 2 TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2									//
-//COM RESULTADO DO EIXO, Precisa passar no teste1															//
-// E de acordo com o teste 1 criar a logica abaixo. EXEMPLO.. 								//
-////////////////////////////////////////////////////////////////////////////////
-  if(AcX < 300){																															//
-    Serial.print("Número 1");																									//
-  }else if (AcZ < 360 && (AcY >330)){																					//
-    Serial.print("Número 2"); //ou já joga na variavel exemplo abaixo:				//
- 	  ladoDado = '1';																														//
-  }																																						//
-////////////////////////////////////////////////////////////////////////////////
+  Serial.print("\n");
+///////////////////////////////////////////////////////////////////////////////  //
+////traduzir valores do eixos para número   >>>>>>LOGICA PRINCIPAL<<<<<<        //
+//// TESTE 2 TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2TESTE 2                  //
+////COM RESULTADO DO EIXO, Precisa passar no teste1                             //
+//// E de acordo com o teste 1 criar a logica abaixo. EXEMPLO..                 //
+//////////////////////////////////////////////////////////////////////////////////
+//  if(AcX < 300){                                                              //
+//    Serial.print("Número 1");                                                 //
+//  }else if (AcZ < 360 && (AcY >330)){                                         //
+//    Serial.print("Número 2"); //ou já joga na variavel exemplo abaixo:        //
+//    ladoDado = '1';                                                           //
+//  }                                                                           //
+//////////////////////////////////////////////////////////////////////////////////
+//
 
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//ENVIA INFO VIA BLUETOOTH																																 /// 
-//																																													//
-char meEnvieLado = '0';																																			//	
-// O jogo solicitará o envio do número do lado e se for == 1 ele envia o número do LADO			//	
-  if (serial1.available()){																																	//		
-  	meEnvieLado = serial1.read(); 																													//	
-		// 0 não envie,  1 envie 																																//	
-		if(meEnvieLado == '1'){																																	//
-			serial1.print(ladoDado);																														  //
-		}																																												//
-  }																																													//
-//////////////////////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////////////////////////
+////ENVIA INFO VIA BLUETOOTH                                                                 /// 
+////                                                                                          //
+//char meEnvieLado = '0';                                                                     //  
+//// O jogo solicitará o envio do número do lado e se for == 1 ele envia o número do LADO     //  
+//  if (serial1.available()){                                                                 //    
+//    meEnvieLado = serial1.read();                                                           //  
+//    // 0 não envie,  1 envie                                                                //  
+//    if(meEnvieLado == '1'){                                                                 //
+//      serial1.print(ladoDado);                                                              //
+//    }                                                                                       //
+//  }                                                                                         //
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   //Aguarda 300 ms e reinicia o processo
